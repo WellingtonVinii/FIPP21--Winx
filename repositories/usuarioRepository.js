@@ -8,10 +8,11 @@ export default class UsuarioRepository extends Repository {
     }
 
     async cadastrar(usuario) {
-        let sql = " INSERT INTO tb_usuario (usu_nome, usu_email, usu_senha) VALUES (?, ?, ?)";
+        let sql = "INSERT INTO tb_usuario (usu_nome, usu_email, usu_senha) VALUES (?, ?, ?)";
         let valores = [usuario.nome, usuario.email, usuario.senha];
         let result = await this.banco.ExecutaComandoLastInserted(sql, valores);
 
+        //atribui o id que foi gerado para a entidade
         usuario.id = result;
 
         return true;
@@ -40,4 +41,16 @@ export default class UsuarioRepository extends Repository {
 
         return null;
     }
-}   
+
+    async validarAcesso(email, senha) {
+        let sql = "SELECT * FROM tb_usuario WHERE usu_email = ? AND usu_senha = ?";
+        let valores = [email, senha];
+        let rows = await this.banco.ExecutaComando(sql, valores);
+
+        if(rows.length > 0) {
+            return UsuarioEntity.toMap(rows[0]);
+        }
+
+        return null;
+    }
+}

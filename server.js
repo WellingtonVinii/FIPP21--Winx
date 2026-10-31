@@ -1,29 +1,45 @@
 import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
+import swaggerUi from 'swagger-ui-express';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import { createRequire } from "module";
 
-import usuarioRouter from './routes/usuarioRouter.js'
+import usuarioRouter from './routes/usuarioRouter.js';
+import loginRouter from './routes/loginRouter.js';
+import socketInit from './sockets/socket.js';
 
-import path from 'path';
-import { fileURLToPath } from 'url';
+const require = createRequire(import.meta.url);
+const outputJson = require("./outputSwagger.json");
+
 const app = express();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-import http from 'http'
 const server = http.createServer(app);
-import { Server } from 'socket.io'
 
-import socketInit from './sockets/jogoSocket.js';
+//3000 = frontend Next, 5000 = documentação do swagger
+const origens = ['http://localhost:3000', 'http://localhost:5000'];
 
-const io = new Server(server);
-
+const io = new Server(server, {
+    cors: { origin: origens, credentials: true }
+});
 
 socketInit(io);
 
 app.use(express.json());
-
-app.use(express.static(__dirname + '/public'));
+app.use(cookieParser());
+app.use(cors({
+    origin: origens,
+    credentials: true // cookies com http only serão enviadas automaticamente apenas se essa flag estiver true
+}));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(outputJson, {
+    swaggerOptions: {
+        withCredentials: true // para permitir o envio de cookies da nossa rota /docs
+    }
+}));
 
 app.use("/usuario", usuarioRouter);
+app.use("/login", loginRouter);
 
-server.listen('5000', function() {
-    console.log('backend em execução');
-})
+server.listen(5000, () => {
+    console.log("backend em execução na porta 5000 - documentação em http://localhost:5000/docs");
+});

@@ -43,8 +43,15 @@ export default class UsuarioEntity extends Entity {
         return new UsuarioEntity(row["usu_id"], row["usu_nome"], row["usu_email"], row["usu_senha"]);
     }
 
+    //a senha nunca deve ser devolvida nas respostas da API
+    toJSON() {
+        let json = super.toJSON();
+        delete json.senha;
+        return json;
+    }
+
     validar() {
-        if(this.#nome != null && this.#email != null && this.#email.includes("@")) {
+        if(this.#nome && this.#email && this.#senha && this.#email.includes("@")) {
             return true;
         }
 

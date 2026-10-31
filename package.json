@@ -1,17 +1,22 @@
 {
-  "dependencies": {
-    "express": "^4.18.2",
-    "socket.io": "^4.7.4"
-  },
-  "scripts": {
-    "start": "node server.js",
-    "dev": "node --es-module-specifier-resolution=node server.js"
-  },
-  "name": "pfs2",
+  "name": "fipp21",
   "version": "1.0.0",
+  "description": "API da plataforma FIPP21 (jogo 21 / Blackjack multiplayer)",
   "main": "server.js",
+  "scripts": {
+    "start": "node swagger.js"
+  },
   "author": "",
   "license": "ISC",
-  "description": "",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.18.2",
+    "socket.io": "^4.7.4",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1"
+  },
   "type": "module"
 }
