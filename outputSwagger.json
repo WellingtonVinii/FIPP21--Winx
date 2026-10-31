@@ -185,6 +185,190 @@
           }
         }
       }
+    },
+    "/sala/": {
+      "post": {
+        "tags": [
+          "Sala"
+        ],
+        "summary": "Cria uma nova sala de jogo (o dono é o usuário logado)",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/sala"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Sala"
+        ],
+        "summary": "Lista as salas criadas pelo usuário logado",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "jwt": []
+          }
+        ]
+      }
+    },
+    "/sala/{id}": {
+      "get": {
+        "tags": [
+          "Sala"
+        ],
+        "summary": "Retorna a sala e seus participantes ativos",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "jwt": []
+          }
+        ]
+      }
+    },
+    "/sala/{id}/entrar": {
+      "post": {
+        "tags": [
+          "Sala"
+        ],
+        "summary": "Entra na sala através do código (id da sala)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "jwt": []
+          }
+        ]
+      }
+    },
+    "/sala/{id}/sair": {
+      "post": {
+        "tags": [
+          "Sala"
+        ],
+        "summary": "Sai da sala",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "jwt": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -225,6 +409,15 @@
           "senha": {
             "type": "string",
             "example": "123abc"
+          }
+        }
+      },
+      "sala": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "example": "Mesa dos amigos"
           }
         }
       }

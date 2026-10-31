@@ -8,6 +8,7 @@ import { createRequire } from "module";
 
 import usuarioRouter from './routes/usuarioRouter.js';
 import loginRouter from './routes/loginRouter.js';
+import salaRouter from './routes/salaRouter.js';
 import socketInit from './sockets/socket.js';
 
 const require = createRequire(import.meta.url);
@@ -39,6 +40,7 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(outputJson, {
 
 app.use("/usuario", usuarioRouter);
 app.use("/login", loginRouter);
+app.use("/sala", salaRouter);
 
 server.listen(5000, () => {
     console.log("backend em execução na porta 5000 - documentação em http://localhost:5000/docs");

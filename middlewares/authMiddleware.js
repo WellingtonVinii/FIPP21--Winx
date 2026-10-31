@@ -15,6 +15,11 @@ export default class AuthMiddleware {
         return token;
     }
 
+    //valida o token e devolve as informações do usuário (usado também pelo websocket)
+    verificar(token) {
+        return jwt.verify(token, SEGREDO_JWT);
+    }
+
     async validar(req, res, next) {
         if(req.cookies.token) {
             let token = req.cookies.token;

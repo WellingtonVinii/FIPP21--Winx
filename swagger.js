@@ -19,6 +19,9 @@ const doc = {
             login: {
                 email: "fulano@unoeste.br",
                 senha: "123abc"
+            },
+            sala: {
+                nome: "Mesa dos amigos"
             }
         }
     },
