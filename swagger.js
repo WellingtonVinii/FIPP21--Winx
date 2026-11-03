@@ -22,9 +22,6 @@ const doc = {
             },
             sala: {
                 nome: "Mesa dos amigos"
-            },
-            aposta: {
-                valor: 50
             }
         }
     },

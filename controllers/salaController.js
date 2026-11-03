@@ -2,7 +2,7 @@ import ParticipanteEntity from "../entities/participanteEntity.js";
 import SalaEntity from "../entities/salaEntity.js";
 import ParticipanteRepository from "../repositories/participanteRepository.js";
 import SalaRepository from "../repositories/salaRepository.js";
-import { notificarParticipantes } from "../sockets/salaSocket.js";
+import { notificarParticipantes, removerDoCanal } from "../sockets/salaSocket.js";
 import JogoController from "./jogoController.js";
 
 export default class SalaController {
@@ -104,22 +104,33 @@ export default class SalaController {
     async sair(req, res) {
         try{
             let {id} = req.params;
-            let participante = await this.#participanteRepo.buscarAtivo(id, req.usuarioLogado.id);
-            if(participante == null)
+            let saiu = await this.removerParticipante(id, req.usuarioLogado.id);
+            if(!saiu)
                 return res.status(404).json({msg: "Você não está participando dessa sala!"});
 
-            let result = await this.#participanteRepo.registrarSaida(participante.id);
-            if(result) {
-                await notificarParticipantes(id);
-                await this.#jogo.aoSair(id, participante.id);
-                return res.status(200).json({msg: "Você saiu da sala!"});
-            }
-
-            throw new Error("Erro ao registrar a saída do participante");
+            return res.status(200).json({msg: "Você saiu da sala!"});
         }
         catch(error) {
             console.error(error);
             return res.status(500).json({msg: "Erro ao processar requisição"});
         }
+    }
+
+    //usado pela rota de saída e pelo socket (quando o jogador desconecta e não volta)
+    async removerParticipante(salaId, usuarioId) {
+        let participante = await this.#participanteRepo.buscarAtivo(salaId, usuarioId);
+        if(participante == null)
+            return false;
+
+        let result = await this.#participanteRepo.registrarSaida(participante.id);
+        if(!result)
+            throw new Error("Erro ao registrar a saída do participante");
+
+        //quem saiu deixa de receber os eventos da sala
+        await removerDoCanal(salaId, usuarioId);
+        await notificarParticipantes(salaId);
+        await this.#jogo.aoSair(salaId, participante.id);
+
+        return true;
     }
 }

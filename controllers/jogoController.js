@@ -70,16 +70,7 @@ export default class JogoController {
         this.#cartaRepo = new CartaRepository();
     }
 
-    // ---------- requisições (rotas /jogo) ----------
-
-    #responderErro(res, error) {
-        if(error instanceof JogoErro) {
-            return res.status(error.status).json({msg: error.message});
-        }
-
-        console.error(error);
-        return res.status(500).json({msg: "Erro ao processar requisição"});
-    }
+    // ---------- requisição HTTP (rota /jogo) ----------
 
     async obterEstado(req, res) {
         try{
@@ -87,147 +78,115 @@ export default class JogoController {
             return res.status(200).json(this.estadoPublico(salaId));
         }
         catch(error) {
-            return this.#responderErro(res, error);
+            console.error(error);
+            return res.status(500).json({msg: "Erro ao processar requisição"});
         }
     }
 
-    async novaRodada(req, res) {
-        try{
-            let salaId = Number(req.params.salaId);
-            let usuarioId = req.usuarioLogado.id;
+    // ---------- jogadas (chamadas pelo jogoSocket) ----------
+    // cada jogada devolve o novo estado do jogo ou lança um JogoErro com a mensagem para o jogador
 
-            let estado = await this.#executar(salaId, async () => {
-                let jogo = jogos.get(salaId);
-                if(jogo && jogo.fase != FASE.AGUARDANDO) {
-                    throw new JogoErro(409, "Já existe uma rodada em andamento!");
-                }
-                let participante = await this.#participanteRepo.buscarAtivo(salaId, usuarioId);
-                if(!participante) {
-                    throw new JogoErro(403, "Você não está participando dessa sala!");
-                }
+    novaRodada(salaId, usuarioId) {
+        salaId = Number(salaId);
+        return this.#executar(salaId, async () => {
+            let jogo = jogos.get(salaId);
+            if(jogo && jogo.fase != FASE.AGUARDANDO) {
+                throw new JogoErro(409, "Já existe uma rodada em andamento!");
+            }
+            let participante = await this.#participanteRepo.buscarAtivo(salaId, usuarioId);
+            if(!participante) {
+                throw new JogoErro(403, "Você não está participando dessa sala!");
+            }
 
-                await this.#iniciarRodada(salaId);
-                return this.estadoPublico(salaId);
-            });
-
-            return res.status(201).json(estado);
-        }
-        catch(error) {
-            return this.#responderErro(res, error);
-        }
+            await this.#iniciarRodada(salaId);
+            return this.estadoPublico(salaId);
+        });
     }
 
-    async apostar(req, res) {
-        try{
-            let salaId = Number(req.params.salaId);
-            let usuarioId = req.usuarioLogado.id;
-            let valor = arredondar(Number(req.body.valor));
+    apostar(salaId, usuarioId, valor) {
+        salaId = Number(salaId);
+        valor = arredondar(Number(valor));
+        return this.#executar(salaId, async () => {
+            let jogo = jogos.get(salaId);
+            if(!jogo || jogo.fase != FASE.APOSTAS) {
+                throw new JogoErro(409, "Não é o momento de apostar!");
+            }
+            let jogador = jogo.jogadores.find(j => j.participante.usuario.id == usuarioId);
+            if(!jogador) {
+                throw new JogoErro(403, "Você não está participando desta rodada!");
+            }
+            if(jogador.aposta) {
+                throw new JogoErro(409, "Você já apostou nesta rodada!");
+            }
 
-            let estado = await this.#executar(salaId, async () => {
-                let jogo = jogos.get(salaId);
-                if(!jogo || jogo.fase != FASE.APOSTAS) {
-                    throw new JogoErro(409, "Não é o momento de apostar!");
-                }
-                let jogador = jogo.jogadores.find(j => j.participante.usuario.id == usuarioId);
-                if(!jogador) {
-                    throw new JogoErro(403, "Você não está participando desta rodada!");
-                }
-                if(jogador.aposta) {
-                    throw new JogoErro(409, "Você já apostou nesta rodada!");
-                }
+            let aposta = new ApostaEntity(0, valor, jogador.participante, jogo.rodada);
+            if(!aposta.validar(jogador.participante.saldo)) {
+                throw new JogoErro(400, `A aposta deve ser de no mínimo ${ApostaEntity.APOSTA_MINIMA} e no máximo o seu saldo (${jogador.participante.saldo})!`);
+            }
 
-                let aposta = new ApostaEntity(0, valor, jogador.participante, jogo.rodada);
-                if(!aposta.validar(jogador.participante.saldo)) {
-                    throw new JogoErro(400, `A aposta deve ser de no mínimo ${ApostaEntity.APOSTA_MINIMA} e no máximo o seu saldo (${jogador.participante.saldo})!`);
-                }
+            //só debita se ainda houver saldo no banco
+            let debitou = await this.#participanteRepo.debitar(jogador.participante.id, valor);
+            if(!debitou) {
+                throw new JogoErro(400, "Saldo insuficiente para essa aposta!");
+            }
+            jogador.participante.saldo = arredondar(jogador.participante.saldo - valor);
 
-                //só debita se ainda houver saldo no banco
-                let debitou = await this.#participanteRepo.debitar(jogador.participante.id, valor);
-                if(!debitou) {
-                    throw new JogoErro(400, "Saldo insuficiente para essa aposta!");
-                }
-                jogador.participante.saldo = arredondar(jogador.participante.saldo - valor);
+            await this.#apostaRepo.cadastrar(aposta);
+            jogador.aposta = aposta;
 
-                await this.#apostaRepo.cadastrar(aposta);
-                jogador.aposta = aposta;
+            await notificarParticipantes(salaId);
 
-                await notificarParticipantes(salaId);
+            //todos apostaram: não precisa esperar o tempo acabar
+            if(jogo.jogadores.every(j => j.aposta)) {
+                await this.#encerrarApostas(jogo);
+            }
+            else {
+                this.#notificar(jogo);
+            }
 
-                //todos apostaram: não precisa esperar o tempo acabar
-                if(jogo.jogadores.every(j => j.aposta)) {
-                    await this.#encerrarApostas(jogo);
-                }
-                else {
-                    this.#notificar(jogo);
-                }
-
-                return this.estadoPublico(salaId);
-            });
-
-            return res.status(200).json(estado);
-        }
-        catch(error) {
-            return this.#responderErro(res, error);
-        }
+            return this.estadoPublico(salaId);
+        });
     }
 
     //pedir carta (hit)
-    async pedir(req, res) {
-        try{
-            let salaId = Number(req.params.salaId);
-            let usuarioId = req.usuarioLogado.id;
+    pedir(salaId, usuarioId) {
+        salaId = Number(salaId);
+        return this.#executar(salaId, async () => {
+            let jogo = jogos.get(salaId);
+            let jogador = this.#jogadorDaVez(jogo, usuarioId);
 
-            let estado = await this.#executar(salaId, async () => {
-                let jogo = jogos.get(salaId);
-                let jogador = this.#jogadorDaVez(jogo, usuarioId);
+            let [carta] = await this.#comprar(jogo, 1);
+            await this.#darCarta(jogo, jogador, carta, true);
 
-                let [carta] = await this.#comprar(jogo, 1);
-                await this.#darCarta(jogo, jogador, carta, true);
+            let soma = jogador.turno.somaCartas;
+            if(soma > 21) {
+                jogador.turno.status = "Estourou";
+                await this.#turnoRepo.atualizar(jogador.turno);
+                await this.#parar(jogo, jogador);
+            }
+            else if(soma == 21) {
+                await this.#parar(jogo, jogador);
+            }
+            else {
+                //nova carta: o tempo do turno recomeça
+                this.#agendar(jogo, TEMPO_TURNO, () => this.#parar(jogo, jogador));
+                this.#notificar(jogo);
+            }
 
-                let soma = jogador.turno.somaCartas;
-                if(soma > 21) {
-                    jogador.turno.status = "Estourou";
-                    await this.#turnoRepo.atualizar(jogador.turno);
-                    await this.#parar(jogo, jogador);
-                }
-                else if(soma == 21) {
-                    await this.#parar(jogo, jogador);
-                }
-                else {
-                    //nova carta: o tempo do turno recomeça
-                    this.#agendar(jogo, TEMPO_TURNO, () => this.#parar(jogo, jogador));
-                    this.#notificar(jogo);
-                }
-
-                return this.estadoPublico(salaId);
-            });
-
-            return res.status(200).json(estado);
-        }
-        catch(error) {
-            return this.#responderErro(res, error);
-        }
+            return this.estadoPublico(salaId);
+        });
     }
 
     //parar (stand)
-    async parar(req, res) {
-        try{
-            let salaId = Number(req.params.salaId);
-            let usuarioId = req.usuarioLogado.id;
+    parar(salaId, usuarioId) {
+        salaId = Number(salaId);
+        return this.#executar(salaId, async () => {
+            let jogo = jogos.get(salaId);
+            let jogador = this.#jogadorDaVez(jogo, usuarioId);
 
-            let estado = await this.#executar(salaId, async () => {
-                let jogo = jogos.get(salaId);
-                let jogador = this.#jogadorDaVez(jogo, usuarioId);
-
-                await this.#parar(jogo, jogador);
-                return this.estadoPublico(salaId);
-            });
-
-            return res.status(200).json(estado);
-        }
-        catch(error) {
-            return this.#responderErro(res, error);
-        }
+            await this.#parar(jogo, jogador);
+            return this.estadoPublico(salaId);
+        });
     }
 
     // ---------- eventos da sala (chamados pelo SalaController) ----------

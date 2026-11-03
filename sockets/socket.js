@@ -1,4 +1,5 @@
 import AuthMiddleware from '../middlewares/authMiddleware.js';
+import jogoSocket from './jogoSocket.js';
 import salaSocket from './salaSocket.js';
 
 let ioInstancia = null;
@@ -27,7 +28,8 @@ export default function socketInit(io) {
                 return next(new Error("Token não encontrado!"));
 
             let auth = new AuthMiddleware();
-            socket.usuario = auth.verificar(token);
+            //fica em socket.data para também estar disponível no io.fetchSockets()
+            socket.data.usuario = auth.verificar(token);
             next();
         }
         catch(ex) {
@@ -37,9 +39,6 @@ export default function socketInit(io) {
 
     io.on('connection', (socket) => {
         salaSocket(io, socket);
-
-        socket.on('disconnect', () => {
-            //a saída da sala só acontece pela rota /sala/:id/sair, assim um F5 não remove o participante
-        });
+        jogoSocket(io, socket);
     });
 }
