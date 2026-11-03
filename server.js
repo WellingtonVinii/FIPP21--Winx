@@ -9,7 +9,9 @@ import { createRequire } from "module";
 import usuarioRouter from './routes/usuarioRouter.js';
 import loginRouter from './routes/loginRouter.js';
 import salaRouter from './routes/salaRouter.js';
+import jogoRouter from './routes/jogoRouter.js';
 import socketInit from './sockets/socket.js';
+import JogoController from './controllers/jogoController.js';
 
 const require = createRequire(import.meta.url);
 const outputJson = require("./outputSwagger.json");
@@ -41,7 +43,11 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(outputJson, {
 app.use("/usuario", usuarioRouter);
 app.use("/login", loginRouter);
 app.use("/sala", salaRouter);
+app.use("/jogo", jogoRouter);
 
 server.listen(5000, () => {
     console.log("backend em execução na porta 5000 - documentação em http://localhost:5000/docs");
+
+    //rodadas que ficaram abertas numa execução anterior não podem continuar (o estado do jogo fica em memória)
+    new JogoController().recuperarRodadasAbertas().catch(console.error);
 });

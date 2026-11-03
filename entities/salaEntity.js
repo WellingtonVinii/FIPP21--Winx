@@ -2,6 +2,8 @@ import Entity from "./entity.js";
 import UsuarioEntity from "./usuarioEntity.js";
 
 export default class SalaEntity extends Entity {
+    static MAX_JOGADORES = 4;   //além dos jogadores a mesa tem o dealer
+
     #id;
     #nome;
     #usuario;

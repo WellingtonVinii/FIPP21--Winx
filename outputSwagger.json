@@ -321,6 +321,9 @@
           "404": {
             "description": "Not Found"
           },
+          "409": {
+            "description": "Conflict"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -361,6 +364,188 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "jwt": []
+          }
+        ]
+      }
+    },
+    "/jogo/{salaId}": {
+      "get": {
+        "tags": [
+          "Jogo"
+        ],
+        "summary": "Retorna o estado atual do jogo da sala (fase, jogadores, cartas, dealer)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "salaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "jwt": []
+          }
+        ]
+      }
+    },
+    "/jogo/{salaId}/rodada": {
+      "post": {
+        "tags": [
+          "Jogo"
+        ],
+        "summary": "Inicia uma nova rodada quando a sala está aguardando",
+        "description": "",
+        "parameters": [
+          {
+            "name": "salaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "jwt": []
+          }
+        ]
+      }
+    },
+    "/jogo/{salaId}/apostar": {
+      "post": {
+        "tags": [
+          "Jogo"
+        ],
+        "summary": "Faz a aposta do jogador na rodada atual",
+        "description": "",
+        "parameters": [
+          {
+            "name": "salaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/aposta"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jogo/{salaId}/pedir": {
+      "post": {
+        "tags": [
+          "Jogo"
+        ],
+        "summary": "Pede mais uma carta (hit)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "salaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "jwt": []
+          }
+        ]
+      }
+    },
+    "/jogo/{salaId}/parar": {
+      "post": {
+        "tags": [
+          "Jogo"
+        ],
+        "summary": "Para e encerra o turno (stand)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "salaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "security": [
@@ -418,6 +603,15 @@
           "nome": {
             "type": "string",
             "example": "Mesa dos amigos"
+          }
+        }
+      },
+      "aposta": {
+        "type": "object",
+        "properties": {
+          "valor": {
+            "type": "number",
+            "example": 50
           }
         }
       }

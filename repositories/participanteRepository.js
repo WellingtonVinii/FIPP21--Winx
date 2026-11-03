@@ -8,16 +8,18 @@ export default class ParticipanteRepository extends Repository {
     }
 
     //a ordem é a próxima posição dentro da sala
-    async cadastrar(participante) {
+    //o HAVING só deixa inserir se a sala ainda tiver vaga (retorna false quando está cheia)
+    async cadastrar(participante, maxJogadores) {
         let sql = `INSERT INTO tb_participante (par_dtentrada, par_ordem, par_saldo, sal_id, usu_id)
                    SELECT NOW(), COALESCE(MAX(par_ordem), 0) + 1, ?, ?, ?
-                   FROM tb_participante WHERE sal_id = ?`;
-        let valores = [participante.saldo, participante.sala.id, participante.usuario.id, participante.sala.id];
+                   FROM tb_participante WHERE sal_id = ?
+                   HAVING COALESCE(SUM(par_dtsaida IS NULL), 0) < ?`;
+        let valores = [participante.saldo, participante.sala.id, participante.usuario.id, participante.sala.id, maxJogadores];
         let result = await this.banco.ExecutaComandoLastInserted(sql, valores);
 
         participante.id = result;
 
-        return true;
+        return result > 0;
     }
 
     //participação ativa (sem data de saída) do usuário na sala
@@ -47,6 +49,38 @@ export default class ParticipanteRepository extends Repository {
         }
 
         return entidades;
+    }
+
+    //participantes ativos que podem jogar (saldo maior que o mínimo)
+    async listarElegiveisPorSala(salaId, saldoMinimo) {
+        let sql = `SELECT p.*, u.usu_nome FROM tb_participante p
+                   INNER JOIN tb_usuario u ON u.usu_id = p.usu_id
+                   WHERE p.sal_id = ? AND p.par_dtsaida IS NULL AND p.par_saldo > ?
+                   ORDER BY p.par_ordem`;
+        let valores = [salaId, saldoMinimo];
+        let rows = await this.banco.ExecutaComando(sql, valores);
+
+        let entidades = [];
+        for(let row of rows) {
+            entidades.push(ParticipanteEntity.toMap(row));
+        }
+
+        return entidades;
+    }
+
+    //só debita se houver saldo suficiente
+    async debitar(id, valor) {
+        let sql = "UPDATE tb_participante SET par_saldo = par_saldo - ? WHERE par_id = ? AND par_saldo >= ?";
+        let valores = [valor, id, valor];
+
+        return await this.banco.ExecutaComandoNonQuery(sql, valores);
+    }
+
+    async creditar(id, valor) {
+        let sql = "UPDATE tb_participante SET par_saldo = par_saldo + ? WHERE par_id = ?";
+        let valores = [valor, id];
+
+        return await this.banco.ExecutaComandoNonQuery(sql, valores);
     }
 
     async registrarSaida(id) {

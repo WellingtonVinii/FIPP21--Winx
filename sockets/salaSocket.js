@@ -1,4 +1,5 @@
 import ParticipanteRepository from '../repositories/participanteRepository.js';
+import JogoController from '../controllers/jogoController.js';
 import { getIO } from './socket.js';
 
 //nome do canal do socket.io para cada sala
@@ -34,6 +35,8 @@ export default function salaSocket(io, socket) {
 
             socket.join(canalSala(salaId));
             socket.emit('sala:participantes', await participanteRepo.listarAtivosPorSala(salaId));
+            //quem acabou de abrir a sala já recebe o jogo como está (ex.: após um F5)
+            socket.emit('jogo:estado', new JogoController().estadoPublico(salaId));
         }
         catch(ex) {
             console.error(ex);

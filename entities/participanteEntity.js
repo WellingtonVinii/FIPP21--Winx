@@ -3,6 +3,9 @@ import SalaEntity from "./salaEntity.js";
 import UsuarioEntity from "./usuarioEntity.js";
 
 export default class ParticipanteEntity extends Entity {
+    static SALDO_INICIAL = 1000;
+    static SALDO_MINIMO = 10;   //apenas participantes com saldo maior que 10 podem jogar
+
     #id;
     #dtEntrada;
     #dtSaida;

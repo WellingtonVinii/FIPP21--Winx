@@ -3,17 +3,18 @@ import SalaEntity from "../entities/salaEntity.js";
 import ParticipanteRepository from "../repositories/participanteRepository.js";
 import SalaRepository from "../repositories/salaRepository.js";
 import { notificarParticipantes } from "../sockets/salaSocket.js";
-
-const SALDO_INICIAL = 1000;
+import JogoController from "./jogoController.js";
 
 export default class SalaController {
 
     #repo;
     #participanteRepo;
+    #jogo;
 
     constructor() {
         this.#repo = new SalaRepository();
         this.#participanteRepo = new ParticipanteRepository();
+        this.#jogo = new JogoController();
     }
 
     async cadastrar(req, res) {
@@ -75,15 +76,22 @@ export default class SalaController {
             //se o usuário já está na sala devolve a participação atual
             let participante = await this.#participanteRepo.buscarAtivo(sala.id, req.usuarioLogado.id);
             if(participante) {
+                this.#jogo.aoEntrar(sala.id).catch(console.error);
                 return res.status(200).json(participante);
             }
 
-            participante = new ParticipanteEntity(0, null, null, null, SALDO_INICIAL, sala, req.usuarioLogado);
-            await this.#participanteRepo.cadastrar(participante);
+            participante = new ParticipanteEntity(0, null, null, null, ParticipanteEntity.SALDO_INICIAL, sala, req.usuarioLogado);
+            let entrou = await this.#participanteRepo.cadastrar(participante, SalaEntity.MAX_JOGADORES);
+            if(!entrou) {
+                return res.status(409).json({msg: `A sala está cheia! O máximo é de ${SalaEntity.MAX_JOGADORES} jogadores.`});
+            }
 
             participante = await this.#participanteRepo.buscarAtivo(sala.id, req.usuarioLogado.id);
 
             await notificarParticipantes(sala.id);
+
+            //quando alguém entra na sala o jogo é iniciado (não precisa esperar o baralho para responder)
+            this.#jogo.aoEntrar(sala.id).catch(console.error);
 
             return res.status(201).json(participante);
         }
@@ -103,6 +111,7 @@ export default class SalaController {
             let result = await this.#participanteRepo.registrarSaida(participante.id);
             if(result) {
                 await notificarParticipantes(id);
+                await this.#jogo.aoSair(id, participante.id);
                 return res.status(200).json({msg: "Você saiu da sala!"});
             }
 
