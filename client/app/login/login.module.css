@@ -1,6 +1,3 @@
-/* Estilo das telas de login e cadastro (inspirado na tela do Aprender Unoeste) */
-
-/* Fundo cinza da tela inteira, com a caixa centralizada */
 .pagina {
   min-height: 100vh;
   display: flex;
@@ -11,13 +8,11 @@
   color: #333333;
 }
 
-/* Caixa branca do formulário */
 .cartao {
   width: 100%;
   max-width: 354px;
   background-color: #ffffff;
   padding: 32px 24px 24px 24px;
-  /* sombra bem fraquinha: deslocamento horizontal, vertical, desfoque e cor (preto com 10% de opacidade) */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -43,7 +38,6 @@
   border-radius: 4px;
 }
 
-/* Borda escura no campo selecionado, igual à tela da Unoeste */
 .campo input:focus {
   outline: none;
   border: 2px solid #111111;
@@ -60,7 +54,6 @@
   cursor: pointer;
 }
 
-/* com o mouse em cima, o botão escurece e ganha uma sombrinha */
 .botao:hover {
   background-color: #d3d4d6;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -71,7 +64,6 @@
   opacity: 0.7;
 }
 
-/* Mensagens de erro e sucesso */
 .erro,
 .sucesso {
   margin-top: 16px;
@@ -95,7 +87,6 @@
   text-decoration: underline;
 }
 
-/* Link azul no fim da caixa (login <-> cadastro) */
 .link {
   display: inline-block;
   margin-top: 56px;
