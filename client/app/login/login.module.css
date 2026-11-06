@@ -1,0 +1,108 @@
+/* Estilo das telas de login e cadastro (inspirado na tela do Aprender Unoeste) */
+
+/* Fundo cinza da tela inteira, com a caixa centralizada */
+.pagina {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  background-color: #f4f4f4;
+  color: #333333;
+}
+
+/* Caixa branca do formulário */
+.cartao {
+  width: 100%;
+  max-width: 354px;
+  background-color: #ffffff;
+  padding: 32px 24px 24px 24px;
+  /* sombra bem fraquinha: deslocamento horizontal, vertical, desfoque e cor (preto com 10% de opacidade) */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.campo {
+  margin-bottom: 20px;
+}
+
+.campo label {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 15px;
+  color: #333333;
+}
+
+.campo input {
+  width: 100%;
+  height: 34px;
+  padding: 4px 8px;
+  font-size: 15px;
+  color: #333333;
+  background-color: #ffffff;
+  border: 1px solid #d6d6e0;
+  border-radius: 4px;
+}
+
+/* Borda escura no campo selecionado, igual à tela da Unoeste */
+.campo input:focus {
+  outline: none;
+  border: 2px solid #111111;
+}
+
+.botao {
+  width: 100%;
+  height: 26px;
+  font-size: 11px;
+  color: #222222;
+  background-color: #e2e3e5;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* com o mouse em cima, o botão escurece e ganha uma sombrinha */
+.botao:hover {
+  background-color: #d3d4d6;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.botao:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+/* Mensagens de erro e sucesso */
+.erro,
+.sucesso {
+  margin-top: 16px;
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.erro {
+  color: #842029;
+  background-color: #f8d7da;
+}
+
+.sucesso {
+  color: #0f5132;
+  background-color: #d1e7dd;
+}
+
+.sucesso a {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* Link azul no fim da caixa (login <-> cadastro) */
+.link {
+  display: inline-block;
+  margin-top: 56px;
+  font-size: 15px;
+  color: #0b5ed7;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
