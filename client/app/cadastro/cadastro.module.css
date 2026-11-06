@@ -1,0 +1,108 @@
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #101820, #243447);
+    padding: 20px;
+}
+
+.card {
+    background-color: white;
+    width: 100%;
+    max-width: 430px;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+}
+
+.card h1 {
+    text-align: center;
+    font-size: 38px;
+    color: #17212b;
+    margin-bottom: 5px;
+}
+
+.card h1 span {
+    color: #d6a738;
+}
+
+.subtitulo {
+    text-align: center;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #17212b;
+}
+
+.card form {
+    display: flex;
+    flex-direction: column;
+}
+
+.card label {
+    margin-bottom: 6px;
+    margin-top: 12px;
+    font-weight: bold;
+    color: #333;
+}
+
+.card input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    font-size: 15px;
+    outline: none;
+}
+
+.card input:focus {
+    border-color: #d6a738;
+}
+
+.card button {
+    margin-top: 25px;
+    padding: 13px;
+    background-color: #d6a738;
+    color: #17212b;
+    border: none;
+    border-radius: 7px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.card button:hover {
+    background-color: #bd912c;
+}
+
+.card button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.mensagem {
+    margin-top: 15px;
+    text-align: center;
+    color: #b22222;
+}
+
+.login {
+    margin-top: 22px;
+    text-align: center;
+    color: #555;
+}
+
+.login a {
+    color: #a77c17;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.login a:hover {
+    text-decoration: underline;
+}
