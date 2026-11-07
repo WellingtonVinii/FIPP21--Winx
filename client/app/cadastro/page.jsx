@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useState } from "react";
@@ -42,20 +41,19 @@ export default function Cadastro() {
 
             setCarregando(true);
 
-            const resposta = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/usuarios`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        nome: nome,
-                        email: email,
-                        senha: senha
-                    })
-                }
-            );
+            const resposta = await fetch("http://localhost:5000/usuario", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nome: nome,
+                    email: email,
+                    senha: senha
+                })
+            });
+
+            
 
             const dados = await resposta.json();
 
