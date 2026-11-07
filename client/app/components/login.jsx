@@ -17,15 +17,12 @@ export default function FormLogin() {
         setEntrando(true);
 
         try {
-            const resposta = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/login`,
-                {
-                    method: "POST",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, senha })
-                }
-            );
+            const resposta = await fetch("http://localhost:5000/login", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, senha })
+            });
             const resultado = await resposta.json();
             if (!resposta.ok) {
                 throw new Error(resultado?.msg || "Não foi possível fazer login.");
