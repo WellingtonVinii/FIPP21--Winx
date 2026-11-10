@@ -1,108 +1,330 @@
+/* Estilização da Tela de Cadastro - Tema Mesa de Jogo FIPP21 (Blackjack) */
 
 .container {
     min-height: 100vh;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #101820, #243447);
-    padding: 20px;
+    background: radial-gradient(circle at center, #152219 0%, #0a110c 100%);
+    padding: 3.5rem 1.5rem;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-family: inherit;
+    box-sizing: border-box;
 }
 
+/* Efeito sutil de textura de feltro no fundo */
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+}
+
+/* Card centralizado inspirado na Mesa de Blackjack (Feltro verde, borda dourada e madeira) */
 .card {
-    background-color: white;
+    background: radial-gradient(ellipse at 50% 20%, #18663e 0%, #0c3e24 60%, #082917 100%);
     width: 100%;
-    max-width: 430px;
-    padding: 35px;
-    border-radius: 15px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+    max-width: 440px;
+    margin: auto;
+    padding: 2.2rem 2.2rem 1.8rem 2.2rem;
+    border-radius: 24px;
+    border: 2px solid #d4af37;
+    box-shadow: 
+        0 0 0 5px #1c140d,
+        0 0 0 7px rgba(212, 175, 55, 0.7),
+        inset 0 0 35px rgba(0, 0, 0, 0.85),
+        0 15px 40px rgba(0, 0, 0, 0.9),
+        0 0 30px rgba(212, 175, 55, 0.22);
+    position: relative;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+    color: #f0f6fc;
+    box-sizing: border-box;
 }
 
-.card h1 {
+/* Cabeçalho do Card */
+.headerArea {
     text-align: center;
-    font-size: 38px;
-    color: #17212b;
-    margin-bottom: 5px;
+    margin-bottom: 1.5rem;
 }
 
-.card h1 span {
-    color: #d6a738;
+.logo {
+    font-size: 2.5rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #ffffff;
+    margin: 0;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.logo span {
+    color: #ffd700;
+    text-shadow: 0 0 16px rgba(255, 215, 0, 0.65);
+}
+
+.naipes {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    font-size: 0.95rem;
+    color: rgba(212, 175, 55, 0.6);
+    margin: 0.25rem 0 0.5rem 0;
+    user-select: none;
+}
+
+.naipesVermelho {
+    color: #ff5555;
 }
 
 .subtitulo {
-    text-align: center;
-    color: #666;
-    margin-bottom: 25px;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.88rem;
+    margin: 0;
 }
 
-.card h2 {
+/* Divisor com estilo clássico da mesa */
+.feltDivider {
+    position: relative;
     text-align: center;
-    margin-bottom: 20px;
-    color: #17212b;
+    margin: 1.25rem 0 1.5rem 0;
 }
 
-.card form {
+.feltDivider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+}
+
+.titulo {
+    position: relative;
+    display: inline-block;
+    background: #0d361f;
+    padding: 0 1rem;
+    color: #ffd700;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+/* Formulário e Campos */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.campo {
     display: flex;
     flex-direction: column;
 }
 
-.card label {
-    margin-bottom: 6px;
-    margin-top: 12px;
-    font-weight: bold;
-    color: #333;
+.label {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #e6edf3;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.card input {
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 7px;
-    font-size: 15px;
+.label i {
+    color: #d4af37;
+    font-size: 0.85rem;
+}
+
+.inputContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.inputIcon {
+    position: absolute;
+    left: 14px;
+    color: rgba(212, 175, 55, 0.75);
+    font-size: 0.95rem;
+    pointer-events: none;
+    transition: color 0.2s ease;
+}
+
+.input {
+    width: 100%;
+    padding: 0.75rem 0.9rem 0.75rem 2.6rem;
+    background: rgba(10, 20, 14, 0.88);
+    border: 1.5px solid rgba(212, 175, 55, 0.3);
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 0.92rem;
     outline: none;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
 }
 
-.card input:focus {
-    border-color: #d6a738;
+.input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.88rem;
 }
 
-.card button {
-    margin-top: 25px;
-    padding: 13px;
-    background-color: #d6a738;
-    color: #17212b;
+.input:focus {
+    background: rgba(13, 30, 22, 0.95);
+    border-color: #ffd700;
+    box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.5),
+        0 0 12px rgba(255, 215, 0, 0.35);
+}
+
+.input:focus + .inputIcon,
+.inputContainer:focus-within .inputIcon {
+    color: #ffd700;
+}
+
+/* Alertas de Mensagem */
+.mensagemErro {
+    background: rgba(218, 54, 51, 0.2);
+    border: 1px solid #da3633;
+    color: #ff7b72;
+    padding: 0.65rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.mensagemSucesso {
+    background: rgba(46, 160, 67, 0.22);
+    border: 1px solid #2ea043;
+    color: #56d364;
+    padding: 0.65rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Botão Cadastrar Dourado (Igual aos botões de aposta/ação da mesa) */
+.btnCadastrar {
+    margin-top: 0.5rem;
+    padding: 0.85rem 1.5rem;
+    background: linear-gradient(180deg, #d4af37 0%, #aa820a 100%);
+    color: #0b1a10;
     border: none;
-    border-radius: 7px;
-    font-size: 16px;
-    font-weight: bold;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
-.card button:hover {
-    background-color: #bd912c;
+.btnCadastrar:hover:not(:disabled) {
+    background: linear-gradient(180deg, #f1c40f 0%, #c29d0b 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
 }
 
-.card button:disabled {
-    opacity: 0.6;
+.btnCadastrar:disabled {
+    opacity: 0.65;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
-.mensagem {
-    margin-top: 15px;
+/* Rodapé do Card */
+.footerArea {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px dashed rgba(212, 175, 55, 0.25);
     text-align: center;
-    color: #b22222;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
 }
 
-.login {
-    margin-top: 22px;
-    text-align: center;
-    color: #555;
-}
-
-.login a {
-    color: #a77c17;
-    font-weight: bold;
+.linkLogin {
+    color: #ffd700;
+    font-weight: 700;
     text-decoration: none;
+    transition: all 0.2s;
 }
 
-.login a:hover {
+.linkLogin:hover {
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
     text-decoration: underline;
+}
+
+.linkVoltar {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+}
+
+.linkVoltar:hover {
+    color: #ffd700;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 500px) {
+    .container {
+        padding: 2rem 1.25rem;
+    }
+
+    .card {
+        padding: 1.75rem 1.25rem;
+        border-radius: 20px;
+    }
+
+    .logo {
+        font-size: 2rem;
+    }
 }
