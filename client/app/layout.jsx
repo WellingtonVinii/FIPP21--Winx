@@ -1,7 +1,9 @@
 import { Nunito } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import "../public/template/css/sb-admin-2.min.css";
 import "../public/template/css/fontawesome-free/css/all.min.css";
+import { AuthProvider } from "./context/AuthContext";
 
 const nunito = Nunito({ subsets: ['latin'] });
 
@@ -12,14 +14,16 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="pt-BR">
-      <head>
-        <script src="/template/js/jquery.min.js"></script>
-        <script src="/template/js/bootstrap.bundle.min.js"></script>
-        <script src="/template/js/sb-admin-2.min.js"></script>
-      </head>
+    <html lang="pt-BR" suppressHydrationWarning>
       <body className={nunito.className}>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+
+        <Script src="/template/js/jquery.min.js" strategy="beforeInteractive" />
+        <Script src="/template/js/bootstrap.bundle.min.js" strategy="beforeInteractive" />
+        <Script src="/template/js/sb-admin-2.min.js" strategy="afterInteractive" />
+        <Script src="https://cdn.socket.io/4.7.4/socket.io.min.js" strategy="afterInteractive" />
       </body>
     </html>
   );
