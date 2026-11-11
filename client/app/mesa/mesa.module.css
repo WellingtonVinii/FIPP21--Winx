@@ -2,6 +2,7 @@
 
 .mesaContainer {
     min-height: 100vh;
+    flex-shrink: 0; /* cresce com a mesa em vez de ser espremida na altura da janela */
     display: flex;
     flex-direction: column;
     background: radial-gradient(circle at 50% 20%, #290838 0%, #160324 55%, #0a0112 100%);
@@ -12,6 +13,7 @@
 
 /* Header superior da mesa mágica */
 .mesaHeader {
+    flex-shrink: 0;
     background: rgba(22, 3, 36, 0.92);
     backdrop-filter: blur(12px);
     border-bottom: 2px solid rgba(255, 42, 133, 0.35);
@@ -51,7 +53,7 @@
 
 /* A mesa mágica de feltro Winx */
 .feltTableArea {
-    flex: 1;
+    flex: 1 0 auto; /* nunca menor que a mesa: senão o overflow corta o crupiê e os jogadores */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -455,6 +457,7 @@
 
 /* Dock de Ações do Jogador na base da tela */
 .actionDock {
+    flex-shrink: 0;
     background: rgba(24, 3, 30, 0.96);
     backdrop-filter: blur(14px);
     border-top: 2px solid rgba(255, 42, 133, 0.4);

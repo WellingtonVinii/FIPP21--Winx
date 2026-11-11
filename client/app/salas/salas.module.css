@@ -1,0 +1,648 @@
+/* Lobby de Salas FIPP21 - mesmo tema mágico da mesa (Clube das Winx / Alfea) */
+
+.lobby {
+    min-height: 100vh;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(circle at 50% 0%, #2e083d 0%, #160324 50%, #0a0112 100%);
+    color: #fdf2f8;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* brilhos de fada ao fundo, iguais aos da mesa */
+.lobby::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(rgba(255, 182, 193, 0.13) 1.5px, transparent 1.5px),
+        radial-gradient(rgba(0, 229, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(rgba(255, 215, 0, 0.13) 1.5px, transparent 1.5px);
+    background-size: 40px 40px, 60px 60px, 50px 50px;
+    background-position: 0 0, 20px 20px, 10px 30px;
+    pointer-events: none;
+}
+
+.telaCarregando {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at 50% 30%, #2e083d 0%, #150221 65%, #090010 100%);
+    color: #ffd700;
+}
+
+.telaCarregando i {
+    color: #ff2a85;
+}
+
+/* ---------- Cabeçalho ---------- */
+
+.header {
+    position: relative;
+    z-index: 2;
+    background: rgba(22, 3, 36, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid rgba(255, 42, 133, 0.35);
+    box-shadow: 0 4px 20px rgba(255, 42, 133, 0.15);
+    padding: 0.75rem 0;
+}
+
+.headerInner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 900;
+    font-size: 1.35rem;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+.brand:hover {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.brand i {
+    color: #ff2a85;
+    filter: drop-shadow(0 0 8px rgba(255, 42, 133, 0.7));
+}
+
+.brandDestaque {
+    color: #ffd700;
+}
+
+.brandTag {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #ffd700;
+    background: linear-gradient(135deg, rgba(255, 42, 133, 0.2) 0%, rgba(138, 43, 226, 0.3) 100%);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    border-radius: 6px;
+    padding: 0.15rem 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.headerAcoes {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.usuarioChip {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(45, 6, 38, 0.95);
+    border: 1.5px solid rgba(255, 112, 166, 0.5);
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #ffffff;
+}
+
+.usuarioChip i {
+    color: #ffd700;
+}
+
+.btnHeader,
+.btnHeaderSair {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 800;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btnHeader {
+    background: transparent;
+    color: #fdf2f8;
+    border: 1.5px solid rgba(255, 255, 255, 0.35);
+}
+
+.btnHeader:hover {
+    color: #ffd700;
+    border-color: #ffd700;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+.btnHeaderSair {
+    background: rgba(255, 42, 133, 0.15);
+    color: #ff8fbf;
+    border: 1.5px solid rgba(255, 42, 133, 0.6);
+}
+
+.btnHeaderSair:hover {
+    background: #ff2a85;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 0 14px rgba(255, 42, 133, 0.6);
+}
+
+/* ---------- Conteúdo ---------- */
+
+.main {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    padding-top: 1.75rem;
+    padding-bottom: 2rem;
+}
+
+/* Banner de boas-vindas: o feltro da mesa em miniatura */
+.hero {
+    background: radial-gradient(ellipse at 30% 30%, #9e1b6c 0%, #680d4c 45%, #3c032e 85%, #200119 100%);
+    border-radius: 22px;
+    box-shadow:
+        inset 0 0 60px rgba(0, 0, 0, 0.6),
+        0 10px 30px rgba(0, 0, 0, 0.6),
+        0 0 28px rgba(255, 42, 133, 0.3),
+        0 0 0 2px #ffd700,
+        0 0 0 6px #520b42;
+    padding: 1.75rem 2rem;
+    margin: 6px 6px 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.heroTitulo {
+    font-weight: 900;
+    font-size: 1.7rem;
+    color: #ffd700;
+    margin-bottom: 0.35rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.heroTexto {
+    color: rgba(255, 255, 255, 0.78);
+    margin-bottom: 0;
+    max-width: 620px;
+}
+
+.heroSaldo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1.1rem;
+    border-radius: 14px;
+    background: rgba(32, 1, 25, 0.75);
+    border: 1.5px solid rgba(255, 215, 0, 0.55);
+    box-shadow: 0 0 14px rgba(255, 215, 0, 0.18);
+}
+
+.heroSaldo i {
+    color: #ffd700;
+    font-size: 1.4rem;
+}
+
+.heroSaldo small {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.65);
+    text-transform: uppercase;
+}
+
+.heroSaldo strong {
+    color: #ffe66d;
+    font-size: 1.15rem;
+}
+
+/* ---------- Painéis (entrar por código / criar sala / lista) ---------- */
+
+.painel {
+    height: 100%;
+    background: rgba(31, 4, 39, 0.88);
+    backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255, 42, 133, 0.35);
+    border-radius: 16px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* a lista de salas cresce com o conteúdo: com altura de 100% ela vazava por cima do rodapé */
+section.painel {
+    height: auto;
+}
+
+.painel:hover {
+    border-color: rgba(255, 112, 166, 0.6);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45), 0 0 22px rgba(255, 42, 133, 0.18);
+}
+
+.painelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.95rem 1.25rem;
+    background: rgba(22, 3, 36, 0.7);
+    border-bottom: 1px solid rgba(255, 42, 133, 0.3);
+}
+
+.painelTitulo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 900;
+    font-size: 1.05rem;
+    color: #ffffff;
+    margin: 0;
+}
+
+.painelTitulo i {
+    color: #ffd700;
+}
+
+.painelBody {
+    padding: 1.25rem;
+}
+
+.painelTexto {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.88rem;
+    margin-bottom: 1rem;
+}
+
+.label {
+    display: block;
+    font-weight: 800;
+    font-size: 0.8rem;
+    color: #ffc6e0;
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.3px;
+}
+
+.inputGrupo {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 1rem;
+}
+
+.inputPrefixo {
+    display: flex;
+    align-items: center;
+    padding: 0 0.85rem;
+    font-weight: 900;
+    color: #ffd700;
+    background: rgba(255, 42, 133, 0.18);
+    border: 1.5px solid rgba(255, 112, 166, 0.45);
+    border-right: none;
+    border-radius: 10px 0 0 10px;
+}
+
+.input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1.5px solid rgba(255, 112, 166, 0.45);
+    color: #ffffff;
+    padding: 0.65rem 0.9rem;
+    border-radius: 10px;
+    font-size: 0.98rem;
+    transition: all 0.25s ease;
+}
+
+.inputGrupo .input {
+    border-radius: 0 10px 10px 0;
+}
+
+.input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.12);
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.35);
+}
+
+.input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.inputSolo {
+    margin-bottom: 1rem;
+}
+
+.erro {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(220, 53, 69, 0.15);
+    border: 1px solid rgba(255, 99, 120, 0.7);
+    color: #ffb3b9;
+    border-radius: 10px;
+    padding: 0.55rem 0.8rem;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.btnEntrar,
+.btnCriar {
+    width: 100%;
+    font-weight: 900;
+    font-size: 0.98rem;
+    padding: 0.7rem 1rem;
+    border: none;
+    border-radius: 10px;
+    color: #ffffff;
+    cursor: pointer;
+    letter-spacing: 0.4px;
+    transition: all 0.2s ease;
+}
+
+.btnEntrar {
+    background: linear-gradient(135deg, #ff2a85 0%, #7209b7 100%);
+    box-shadow: 0 4px 16px rgba(255, 42, 133, 0.45);
+}
+
+.btnEntrar:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(255, 42, 133, 0.7);
+}
+
+.btnCriar {
+    background: linear-gradient(135deg, #00e5ff 0%, #7c4dff 100%);
+    box-shadow: 0 4px 16px rgba(0, 229, 255, 0.4);
+}
+
+.btnCriar:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(0, 229, 255, 0.65);
+}
+
+.btnEntrar:disabled,
+.btnCriar:disabled,
+.btnJogar:disabled,
+.btnAtualizar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btnAtualizar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: transparent;
+    color: #fdf2f8;
+    border: 1.5px solid rgba(255, 112, 166, 0.5);
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.82rem;
+    padding: 0.35rem 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btnAtualizar:hover:not(:disabled) {
+    color: #ffd700;
+    border-color: #ffd700;
+}
+
+/* ---------- Lista de salas ---------- */
+
+.contador {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #ffd700;
+    background: rgba(255, 215, 0, 0.12);
+    border: 1px solid rgba(255, 215, 0, 0.45);
+    border-radius: 999px;
+    padding: 0.1rem 0.55rem;
+}
+
+.estado {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.estado i {
+    color: #ff70a6;
+    margin-bottom: 0.75rem;
+}
+
+.estado h5 {
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.estadoErro {
+    color: #ffb3b9;
+}
+
+.estadoErro i {
+    color: #ff6b81;
+}
+
+.gradeSalas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    padding: 1.25rem;
+}
+
+.salaCard {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 14px;
+    background: linear-gradient(160deg, rgba(104, 13, 76, 0.55) 0%, rgba(38, 4, 30, 0.9) 100%);
+    border: 1.5px solid rgba(255, 112, 166, 0.3);
+    transition: all 0.22s ease;
+}
+
+.salaCard:hover {
+    transform: translateY(-3px);
+    border-color: #ff70a6;
+    box-shadow: 0 8px 24px rgba(255, 42, 133, 0.28);
+}
+
+.salaCardCheia {
+    opacity: 0.8;
+}
+
+.salaTopo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.salaCodigo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: linear-gradient(135deg, rgba(255, 42, 133, 0.2) 0%, rgba(138, 43, 226, 0.3) 100%);
+    color: #ffd700;
+    border: 1px solid rgba(255, 215, 0, 0.6);
+    border-radius: 8px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.salaCodigo:hover {
+    border-color: #ffd700;
+    box-shadow: 0 0 12px rgba(255, 42, 133, 0.5);
+    transform: translateY(-1px);
+}
+
+.salaCodigoCopiado {
+    color: #70e000;
+    border-color: #70e000;
+}
+
+.vagas {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #a3f7b5;
+}
+
+.vagasCheia {
+    color: #ff8fa3;
+}
+
+.pontos {
+    display: inline-flex;
+    gap: 3px;
+}
+
+.ponto {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.pontoOcupado {
+    background: #06d6a0;
+    box-shadow: 0 0 6px rgba(6, 214, 160, 0.8);
+}
+
+.vagasCheia .pontoOcupado {
+    background: #ff4d6d;
+    box-shadow: 0 0 6px rgba(255, 77, 109, 0.8);
+}
+
+.salaNome {
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: #ffffff;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.salaDono {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.65);
+    min-width: 0;
+}
+
+.salaDono i {
+    color: #ffd700;
+}
+
+.salaDonoNome {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.voceTag {
+    flex-shrink: 0;
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: #2a0320;
+    background: #ffd700;
+    border-radius: 6px;
+    padding: 0.05rem 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btnJogar {
+    margin-top: auto;
+    width: 100%;
+    font-weight: 900;
+    font-size: 0.92rem;
+    padding: 0.55rem 1rem;
+    border: none;
+    border-radius: 10px;
+    color: #2a0320;
+    background: linear-gradient(135deg, #ffe66d 0%, #ffb703 100%);
+    box-shadow: 0 4px 14px rgba(255, 215, 0, 0.3);
+    cursor: pointer;
+    letter-spacing: 0.4px;
+    transition: all 0.2s ease;
+}
+
+.btnJogar:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.55);
+}
+
+/* ---------- Rodapé ---------- */
+
+.footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 1rem;
+    background: rgba(22, 3, 36, 0.92);
+    border-top: 1px solid rgba(255, 42, 133, 0.3);
+}
+
+.footer strong {
+    color: #ffc6e0;
+}
+
+@media (max-width: 576px) {
+    .hero {
+        padding: 1.25rem;
+    }
+
+    .heroTitulo {
+        font-size: 1.35rem;
+    }
+
+    .usuarioChip {
+        display: none;
+    }
+}

@@ -736,7 +736,7 @@ export default function MesaJogoPage({ params }) {
                                 disabled={saindo}
                                 autoFocus
                             >
-                                <i className="fas fa-wand-magic-sparkles mr-1"></i> Continuar jogando
+                                <i className="fas fa-magic mr-1"></i> Continuar jogando
                             </button>
                             <button
                                 type="button"

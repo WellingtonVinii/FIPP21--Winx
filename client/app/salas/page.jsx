@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
+import styles from './salas.module.css';
 
 export default function SalasLobby() {
     const { usuario, logout, carregando, verificarUsuario } = useAuth();
@@ -169,109 +170,96 @@ export default function SalasLobby() {
 
     if (carregando) {
         return (
-            <div className="min-vh-100 d-flex justify-content-center align-items-center bg-light">
-                <div className="spinner-border text-primary" role="status">
-                    <span className="sr-only">Carregando...</span>
-                </div>
+            <div className={styles.telaCarregando}>
+                <i className="fas fa-magic fa-spin fa-3x mb-3"></i>
+                <h5 className="font-weight-bold mb-0">Abrindo os portões de Alfea...</h5>
             </div>
         );
     }
 
     return (
-        <div className="bg-light min-vh-100 d-flex flex-column">
-            {/* Header / Navbar */}
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark py-3 shadow-sm">
-                <div className="container">
-                    <Link className="navbar-brand font-weight-bold d-flex align-items-center" href="/salas">
-                        <i className="fas fa-dice text-warning mr-2 fa-lg"></i>
-                        <span>FIPP<span className="text-warning">21</span></span>
-                        <span className="badge badge-secondary ml-2 small">Lobby</span>
+        <div className={styles.lobby}>
+            {/* Cabeçalho */}
+            <nav className={styles.header}>
+                <div className={`container ${styles.headerInner}`}>
+                    <Link className={styles.brand} href="/salas">
+                        <i className="fas fa-magic"></i>
+                        <span>FIPP<span className={styles.brandDestaque}>21</span></span>
+                        <span className={styles.brandTag}>Lobby</span>
                     </Link>
 
-                    <div className="ml-auto d-flex align-items-center">
-                        <span className="text-white mr-3 d-none d-md-inline">
-                            <i className="fas fa-user-circle mr-1 text-warning"></i>
-                            <strong>{usuario?.nome}</strong>
+                    <div className={styles.headerAcoes}>
+                        <span className={styles.usuarioChip}>
+                            <i className="fas fa-user-circle"></i>
+                            {usuario?.nome}
                         </span>
-                        <Link className="btn btn-outline-light btn-sm mr-2" href="/" title="Regras e Informações">
-                            <i className="fas fa-info-circle mr-1"></i> Regras
+                        <Link className={styles.btnHeader} href="/" title="Regras e Informações">
+                            <i className="fas fa-info-circle"></i> Regras
                         </Link>
-                        <button className="btn btn-danger btn-sm" onClick={logout} title="Encerrar Sessão">
-                            <i className="fas fa-sign-out-alt mr-1"></i> Sair
+                        <button className={styles.btnHeaderSair} onClick={logout} title="Encerrar Sessão">
+                            <i className="fas fa-sign-out-alt"></i> Sair
                         </button>
                     </div>
                 </div>
             </nav>
 
             {/* Conteúdo Principal */}
-            <main className="container py-4 flex-grow-1">
-                {/* Banner de boas vindas */}
-                <div className="card text-white mb-4 shadow-sm" style={{
-                    background: "linear-gradient(135deg, #115738 0%, #08291a 100%)",
-                    borderLeft: "6px solid #d4af37"
-                }}>
-                    <div className="card-body p-4">
-                        <div className="row align-items-center">
-                            <div className="col-md-8">
-                                <h2 className="font-weight-bold mb-1">
-                                    Mesa de Blackjack - Área Restrita
-                                </h2>
-                                <p className="mb-0 text-white-50">
-                                    Crie uma sala, digite o código de uma sala existente ou escolha uma das salas disponíveis abaixo.
-                                </p>
-                            </div>
-                            <div className="col-md-4 text-md-right mt-3 mt-md-0">
-                                <span className="badge badge-warning text-dark p-2 font-weight-bold">
-                                    <i className="fas fa-coins mr-1"></i> Saldo Inicial por Mesa: R$ 1.000,00
-                                </span>
-                            </div>
+            <main className={`container ${styles.main}`}>
+                {/* Banner de boas-vindas */}
+                <section className={styles.hero}>
+                    <div>
+                        <h2 className={styles.heroTitulo}>
+                            ✨ Boas-vindas a Alfea{usuario?.nome ? `, ${usuario.nome}` : ''}!
+                        </h2>
+                        <p className={styles.heroTexto}>
+                            Crie uma sala, digite o código de uma sala existente ou escolha uma das mesas encantadas abaixo.
+                        </p>
+                    </div>
+                    <div className={styles.heroSaldo}>
+                        <i className="fas fa-gem"></i>
+                        <div>
+                            <small>Saldo inicial por mesa</small>
+                            <strong>R$ 1.000,00</strong>
                         </div>
                     </div>
-                </div>
+                </section>
 
                 <div className="row">
-                    {/* Card: Entrar por Código */}
+                    {/* Entrar por Código */}
                     <div className="col-lg-6 mb-4">
-                        <div className="card border-0 shadow-sm h-100">
-                            <div className="card-header bg-white py-3 border-bottom d-flex align-items-center">
-                                <i className="fas fa-key text-primary mr-2 fa-lg"></i>
-                                <h5 className="font-weight-bold mb-0 text-dark">Entrar em uma Sala por Código</h5>
+                        <div className={styles.painel}>
+                            <div className={styles.painelHeader}>
+                                <h5 className={styles.painelTitulo}>
+                                    <i className="fas fa-key"></i> Entrar em uma Sala por Código
+                                </h5>
                             </div>
-                            <div className="card-body p-4">
-                                <p className="text-muted small mb-3">
+                            <div className={styles.painelBody}>
+                                <p className={styles.painelTexto}>
                                     Tem o código fornecido pelo criador da sala? Digite-o abaixo para se sentar à mesa:
                                 </p>
                                 <form onSubmit={(e) => handleEntrarPorCodigo(e)}>
-                                    <div className="form-group mb-3">
-                                        <label className="font-weight-bold text-dark small" htmlFor="codigoSala">
-                                            Código da Sala (ID):
-                                        </label>
-                                        <div className="input-group">
-                                            <div className="input-group-prepend">
-                                                <span className="input-group-text bg-light text-muted">#</span>
-                                            </div>
-                                            <input
-                                                id="codigoSala"
-                                                type="number"
-                                                min="1"
-                                                className="form-control"
-                                                placeholder="Ex: 5"
-                                                value={codigoEntrar}
-                                                onChange={(e) => setCodigoEntrar(e.target.value)}
-                                                required
-                                            />
-                                        </div>
+                                    <label className={styles.label} htmlFor="codigoSala">
+                                        Código da Sala (ID)
+                                    </label>
+                                    <div className={styles.inputGrupo}>
+                                        <span className={styles.inputPrefixo}>#</span>
+                                        <input
+                                            id="codigoSala"
+                                            type="number"
+                                            min="1"
+                                            className={styles.input}
+                                            placeholder="Ex: 5"
+                                            value={codigoEntrar}
+                                            onChange={(e) => setCodigoEntrar(e.target.value)}
+                                            required
+                                        />
                                     </div>
                                     {erroEntrar && (
-                                        <div className="alert alert-danger small py-2 mb-3" role="alert">
-                                            <i className="fas fa-exclamation-triangle mr-1"></i> {erroEntrar}
+                                        <div className={styles.erro} role="alert">
+                                            <i className="fas fa-exclamation-triangle"></i> {erroEntrar}
                                         </div>
                                     )}
-                                    <button
-                                        type="submit"
-                                        className="btn btn-primary btn-block font-weight-bold shadow-sm"
-                                        disabled={entrandoSala}
-                                    >
+                                    <button type="submit" className={styles.btnEntrar} disabled={entrandoSala}>
                                         {entrandoSala ? (
                                             <span><i className="fas fa-spinner fa-spin mr-1"></i> Entrando...</span>
                                         ) : (
@@ -283,47 +271,42 @@ export default function SalasLobby() {
                         </div>
                     </div>
 
-                    {/* Card: Criar Nova Sala */}
+                    {/* Criar Nova Sala */}
                     <div className="col-lg-6 mb-4">
-                        <div className="card border-0 shadow-sm h-100">
-                            <div className="card-header bg-white py-3 border-bottom d-flex align-items-center">
-                                <i className="fas fa-plus-circle text-success mr-2 fa-lg"></i>
-                                <h5 className="font-weight-bold mb-0 text-dark">Criar Nova Sala de Jogo</h5>
+                        <div className={styles.painel}>
+                            <div className={styles.painelHeader}>
+                                <h5 className={styles.painelTitulo}>
+                                    <i className="fas fa-plus-circle"></i> Criar Nova Sala de Jogo
+                                </h5>
                             </div>
-                            <div className="card-body p-4">
-                                <p className="text-muted small mb-3">
-                                    Dê um nome para a sua sala. Ao criar, você será colocado diretamente na mesa.
+                            <div className={styles.painelBody}>
+                                <p className={styles.painelTexto}>
+                                    Dê um nome para a sua sala. Ao criar, você já entra direto na mesa.
                                 </p>
                                 <form onSubmit={handleCriarSala}>
-                                    <div className="form-group mb-3">
-                                        <label className="font-weight-bold text-dark small" htmlFor="nomeSala">
-                                            Nome da Sala:
-                                        </label>
-                                        <input
-                                            id="nomeSala"
-                                            type="text"
-                                            maxLength="200"
-                                            className="form-control"
-                                            placeholder="Ex: Mesa dos Campeões"
-                                            value={nomeNovaSala}
-                                            onChange={(e) => setNomeNovaSala(e.target.value)}
-                                            required
-                                        />
-                                    </div>
+                                    <label className={styles.label} htmlFor="nomeSala">
+                                        Nome da Sala
+                                    </label>
+                                    <input
+                                        id="nomeSala"
+                                        type="text"
+                                        maxLength="200"
+                                        className={`${styles.input} ${styles.inputSolo}`}
+                                        placeholder="Ex: Mesa das Fadas"
+                                        value={nomeNovaSala}
+                                        onChange={(e) => setNomeNovaSala(e.target.value)}
+                                        required
+                                    />
                                     {erroCriar && (
-                                        <div className="alert alert-danger small py-2 mb-3" role="alert">
-                                            <i className="fas fa-exclamation-triangle mr-1"></i> {erroCriar}
+                                        <div className={styles.erro} role="alert">
+                                            <i className="fas fa-exclamation-triangle"></i> {erroCriar}
                                         </div>
                                     )}
-                                    <button
-                                        type="submit"
-                                        className="btn btn-success btn-block font-weight-bold shadow-sm"
-                                        disabled={criandoSala}
-                                    >
+                                    <button type="submit" className={styles.btnCriar} disabled={criandoSala}>
                                         {criandoSala ? (
                                             <span><i className="fas fa-spinner fa-spin mr-1"></i> Criando...</span>
                                         ) : (
-                                            <span><i className="fas fa-plus mr-1"></i> Criar e Entrar na Sala</span>
+                                            <span><i className="fas fa-magic mr-1"></i> Criar e Entrar na Sala</span>
                                         )}
                                     </button>
                                 </form>
@@ -332,15 +315,17 @@ export default function SalasLobby() {
                     </div>
                 </div>
 
-                {/* Seção: Salas Disponíveis (todas as salas, de qualquer usuário) */}
-                <div className="card border-0 shadow-sm mt-2">
-                    <div className="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                        <div className="d-flex align-items-center">
-                            <i className="fas fa-crown text-warning mr-2 fa-lg"></i>
-                            <h5 className="font-weight-bold mb-0 text-dark">Salas Disponíveis</h5>
-                        </div>
+                {/* Salas Disponíveis (todas as salas, de qualquer usuário) */}
+                <section className={styles.painel}>
+                    <div className={styles.painelHeader}>
+                        <h5 className={styles.painelTitulo}>
+                            <i className="fas fa-crown"></i> Salas Disponíveis
+                            {!carregandoSalas && !erroSalas && salas.length > 0 && (
+                                <span className={styles.contador}>{salas.length}</span>
+                            )}
+                        </h5>
                         <button
-                            className="btn btn-outline-secondary btn-sm"
+                            className={styles.btnAtualizar}
                             onClick={atualizar}
                             disabled={carregandoSalas}
                             title="Atualizar lista"
@@ -349,96 +334,88 @@ export default function SalasLobby() {
                         </button>
                     </div>
 
-                    <div className="card-body p-0">
-                        {carregandoSalas ? (
-                            <div className="text-center py-5 text-muted">
-                                <i className="fas fa-spinner fa-spin fa-2x mb-2"></i>
-                                <p className="mb-0">Carregando salas...</p>
-                            </div>
-                        ) : erroSalas ? (
-                            <div className="text-center py-5 text-danger">
-                                <i className="fas fa-exclamation-triangle fa-2x mb-2"></i>
-                                <p className="mb-0">{erroSalas}</p>
-                            </div>
-                        ) : salas.length === 0 ? (
-                            <div className="text-center py-5 text-muted">
-                                <i className="fas fa-folder-open fa-3x mb-3 text-gray-300"></i>
-                                <h5>Nenhuma sala disponível no momento</h5>
-                                <p className="small mb-0">Utilize o formulário acima para criar a primeira sala de Blackjack!</p>
-                            </div>
-                        ) : (
-                            <div className="table-responsive">
-                                <table className="table table-hover align-middle mb-0">
-                                    <thead className="thead-light">
-                                        <tr>
-                                            <th style={{ width: "120px" }}>Código</th>
-                                            <th>Nome da Sala</th>
-                                            <th>Criada por</th>
-                                            <th className="text-center" style={{ width: "120px" }}>Jogadores</th>
-                                            <th className="text-center" style={{ width: "160px" }}>Compartilhar</th>
-                                            <th className="text-right" style={{ width: "160px" }}>Ação</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {salas.map((sala) => (
-                                            <tr key={sala.id}>
-                                                <td>
-                                                    <span className="badge badge-dark px-2 py-1 font-weight-bold">
-                                                        #{sala.id}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <strong className="text-dark">{sala.nome}</strong>
-                                                </td>
-                                                <td className="text-muted">
-                                                    {sala.usuario?.nome}
-                                                    {sala.usuario?.id === usuario?.id && (
-                                                        <span className="badge badge-warning text-dark ml-2">Você</span>
-                                                    )}
-                                                </td>
-                                                <td className="text-center">
-                                                    <span className={`badge px-2 py-1 ${(sala.participantes ?? 0) >= MAX_JOGADORES ? 'badge-danger' : 'badge-success'}`}>
-                                                        <i className="fas fa-users mr-1"></i>
-                                                        {sala.participantes ?? 0}/{MAX_JOGADORES}
-                                                    </span>
-                                                </td>
-                                                <td className="text-center">
-                                                    <button
-                                                        className="btn btn-light btn-sm border text-secondary"
-                                                        onClick={() => copiarCodigo(sala.id)}
-                                                        title="Copiar código da sala"
-                                                    >
-                                                        <i className="fas fa-copy mr-1"></i>
-                                                        {copiadoId === sala.id ? (
-                                                            <span className="text-success font-weight-bold">Copiado!</span>
-                                                        ) : (
-                                                            <span>Copiar #{sala.id}</span>
-                                                        )}
-                                                    </button>
-                                                </td>
-                                                <td className="text-right">
-                                                    <button
-                                                        className="btn btn-warning btn-sm font-weight-bold text-dark px-3 shadow-sm"
-                                                        onClick={() => handleEntrarPorCodigo(null, sala.id)}
-                                                    >
-                                                        <i className="fas fa-play mr-1"></i> Jogar
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
-                    </div>
-                </div>
+                    {carregandoSalas ? (
+                        <div className={styles.estado}>
+                            <i className="fas fa-magic fa-spin fa-2x"></i>
+                            <p className="mb-0">Carregando salas...</p>
+                        </div>
+                    ) : erroSalas ? (
+                        <div className={`${styles.estado} ${styles.estadoErro}`}>
+                            <i className="fas fa-exclamation-triangle fa-2x"></i>
+                            <p className="mb-0">{erroSalas}</p>
+                        </div>
+                    ) : salas.length === 0 ? (
+                        <div className={styles.estado}>
+                            <i className="fas fa-hat-wizard fa-3x"></i>
+                            <h5>Nenhuma sala disponível no momento</h5>
+                            <p className="small mb-0">Utilize o formulário acima para criar a primeira sala de Blackjack!</p>
+                        </div>
+                    ) : (
+                        <div className={styles.gradeSalas}>
+                            {salas.map((sala) => {
+                                const ocupadas = sala.participantes ?? 0;
+                                const cheia = ocupadas >= MAX_JOGADORES;
+                                const copiado = copiadoId === sala.id;
+
+                                return (
+                                    <article key={sala.id} className={`${styles.salaCard} ${cheia ? styles.salaCardCheia : ''}`}>
+                                        <div className={styles.salaTopo}>
+                                            <button
+                                                type="button"
+                                                className={`${styles.salaCodigo} ${copiado ? styles.salaCodigoCopiado : ''}`}
+                                                onClick={() => copiarCodigo(sala.id)}
+                                                title="Copiar código da sala"
+                                            >
+                                                <i className={`fas ${copiado ? 'fa-check' : 'fa-copy'}`}></i>
+                                                {copiado ? 'Copiado!' : `#${sala.id}`}
+                                            </button>
+
+                                            <span
+                                                className={`${styles.vagas} ${cheia ? styles.vagasCheia : ''}`}
+                                                title={cheia ? 'Sala cheia' : `${MAX_JOGADORES - ocupadas} vaga(s) livre(s)`}
+                                            >
+                                                <span className={styles.pontos}>
+                                                    {Array.from({ length: MAX_JOGADORES }, (_, i) => (
+                                                        <span
+                                                            key={i}
+                                                            className={`${styles.ponto} ${i < ocupadas ? styles.pontoOcupado : ''}`}
+                                                        ></span>
+                                                    ))}
+                                                </span>
+                                                {cheia ? 'Cheia' : `${ocupadas}/${MAX_JOGADORES}`}
+                                            </span>
+                                        </div>
+
+                                        <h6 className={styles.salaNome} title={sala.nome}>{sala.nome}</h6>
+
+                                        <div className={styles.salaDono}>
+                                            <i className="fas fa-crown"></i>
+                                            <span className={styles.salaDonoNome}>{sala.usuario?.nome}</span>
+                                            {sala.usuario?.id === usuario?.id && (
+                                                <span className={styles.voceTag}>Você</span>
+                                            )}
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            className={styles.btnJogar}
+                                            onClick={() => handleEntrarPorCodigo(null, sala.id)}
+                                            disabled={entrandoSala}
+                                        >
+                                            <i className="fas fa-play mr-1"></i> Jogar
+                                        </button>
+                                    </article>
+                                );
+                            })}
+                        </div>
+                    )}
+                </section>
             </main>
 
-            {/* Footer */}
-            <footer className="bg-white border-top py-3 text-center text-muted small">
-                FIPP21 - Plataforma de Jogo 21 Multiplayer &bull; Sessão ativa como {usuario?.nome}
+            {/* Rodapé */}
+            <footer className={styles.footer}>
+                FIPP21 - Plataforma de Jogo 21 Multiplayer &bull; Sessão ativa como <strong>{usuario?.nome}</strong>
             </footer>
         </div>
     );
 }
-
