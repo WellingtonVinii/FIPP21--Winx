@@ -30,6 +30,8 @@ export default function MesaJogoPage({ params }) {
     const [notificacao, setNotificacao] = useState(null);
     const [copiado, setCopiado] = useState(false);
     const [drawerAberto, setDrawerAberto] = useState(false);
+    const [confirmandoSaida, setConfirmandoSaida] = useState(false);
+    const [saindo, setSaindo] = useState(false);
 
     // Contagem regressiva em segundos calculada a partir de jogo.prazo
     const [tempoRestante, setTempoRestante] = useState(null);
@@ -45,7 +47,13 @@ export default function MesaJogoPage({ params }) {
 
     // Inicialização da sala e conexão do socket
     useEffect(() => {
-        if (authCarregando || !usuario || !salaId) return;
+        if (authCarregando) return;
+
+        // sem sessão validada ou com código inválido não há como abrir a mesa: volta para o lobby
+        if (!usuario || !salaId) {
+            router.replace('/salas');
+            return;
+        }
 
         let socket = null;
 
@@ -83,6 +91,11 @@ export default function MesaJogoPage({ params }) {
                 });
 
                 socket.on('disconnect', () => {
+                    setSocketConectado(false);
+                });
+
+                socket.on('connect_error', (erro) => {
+                    console.error('Falha na conexão em tempo real:', erro?.message);
                     setSocketConectado(false);
                 });
 
@@ -210,8 +223,7 @@ export default function MesaJogoPage({ params }) {
     }
 
     async function handleSairDaSala() {
-        if (!confirm('Deseja realmente sair da mesa?')) return;
-
+        setSaindo(true);
         try {
             if (socketRef.current) {
                 socketRef.current.emit('sala:sair', salaId);
@@ -258,7 +270,7 @@ export default function MesaJogoPage({ params }) {
                 <div className={styles.mesaHeaderTitle}>
                     <button
                         className="btn btn-outline-danger btn-sm font-weight-bold"
-                        onClick={handleSairDaSala}
+                        onClick={() => setConfirmandoSaida(true)}
                         title="Sair da sala de jogo"
                     >
                         <i className="fas fa-arrow-left mr-1"></i> Sair da Mesa
@@ -696,6 +708,52 @@ export default function MesaJogoPage({ params }) {
                     </div>
                 )}
             </footer>
+
+            {/* Aviso de confirmação para sair da mesa */}
+            {confirmandoSaida && (
+                <div className={styles.confirmOverlay} onClick={() => !saindo && setConfirmandoSaida(false)}>
+                    <div
+                        className={styles.confirmBox}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="confirmSaidaTitulo"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className={styles.confirmIcon}>
+                            <i className="fas fa-door-open"></i>
+                        </div>
+                        <h5 id="confirmSaidaTitulo" className={styles.confirmTitle}>Sair da mesa?</h5>
+                        <p className={styles.confirmText}>
+                            Você vai deixar <strong className="text-white">{sala?.nome || `a Sala #${salaId}`}</strong> e
+                            voltar para o lobby.
+                            {meuJogador?.aposta && jogo?.fase !== 'finalizada' ? ' Sua aposta desta rodada continua valendo.' : ''}
+                        </p>
+                        <div className={styles.confirmActions}>
+                            <button
+                                type="button"
+                                className={styles.btnConfirmFicar}
+                                onClick={() => setConfirmandoSaida(false)}
+                                disabled={saindo}
+                                autoFocus
+                            >
+                                <i className="fas fa-wand-magic-sparkles mr-1"></i> Continuar jogando
+                            </button>
+                            <button
+                                type="button"
+                                className={styles.btnConfirmSair}
+                                onClick={handleSairDaSala}
+                                disabled={saindo}
+                            >
+                                {saindo ? (
+                                    <span><i className="fas fa-spinner fa-spin mr-1"></i> Saindo...</span>
+                                ) : (
+                                    <span><i className="fas fa-arrow-left mr-1"></i> Sair da mesa</span>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Gaveta Lateral de Participantes */}
             {drawerAberto && (

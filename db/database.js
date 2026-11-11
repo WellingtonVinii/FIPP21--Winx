@@ -1,5 +1,17 @@
 import mysql from 'mysql2'
 
+//um único pool para a aplicação inteira: cada repositório instancia um Database e, se cada um
+//abrisse o seu próprio pool, as conexões se acumulariam até estourar o max_connections do MySQL
+const pool = mysql.createPool({
+    host: '129.148.37.133',
+    database: 'BancoDeDados',
+    user: 'wellington',
+    password: 'Nicolas2019?',
+    connectionLimit: 10,    //o servidor do banco é compartilhado (limite de 200 conexões para todos)
+    maxIdle: 2,             //conexões ociosas além dessas são fechadas após o idleTimeout
+    idleTimeout: 30000
+});
+
 export default class Database {
 
     #conexao;
@@ -7,15 +19,7 @@ export default class Database {
     get conexao() { return this.#conexao;} set conexao(conexao) { this.#conexao = conexao; }
 
     constructor() {
-
-        this.#conexao = mysql.createPool({
-            host: '129.148.37.133',
-            database: 'BancoDeDados',
-            user: 'wellington', 
-            password: 'Nicolas2019?',
-            idleTimeout: 30000,
-            connectionLimit: 50
-        });
+        this.#conexao = pool;
     }
 
     AbreTransacao() {

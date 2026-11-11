@@ -24,9 +24,16 @@ export default class AuthMiddleware {
         if(req.cookies.token) {
             let token = req.cookies.token;
 
+            let payload;
             try {
                 //valida o token e recupera as informações do usuário que estão nele
-                let payload = jwt.verify(token, SEGREDO_JWT);
+                payload = jwt.verify(token, SEGREDO_JWT);
+            }
+            catch(ex) {
+                return res.status(401).json({msg: "Token inválido!"});
+            }
+
+            try {
                 let usuarioRepository = new UsuarioRepository();
                 //confere se o usuário ainda existe no banco de dados
                 let usuario = await usuarioRepository.buscarPorId(payload.id);
@@ -39,8 +46,9 @@ export default class AuthMiddleware {
                 }
             }
             catch(ex) {
-                console.log(ex);
-                return res.status(401).json({msg: "Token inválido!"});
+                //falha no banco não é token inválido: o usuário continua logado
+                console.error(ex);
+                return res.status(500).json({msg: "Erro ao processar requisição"});
             }
         }
         else {

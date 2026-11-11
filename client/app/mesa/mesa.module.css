@@ -682,6 +682,109 @@
     overflow-y: auto;
 }
 
+/* Aviso de confirmação (sair da mesa) */
+.confirmOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(14, 0, 20, 0.78);
+    backdrop-filter: blur(5px);
+    z-index: 300;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.confirmBox {
+    width: 100%;
+    max-width: 400px;
+    background: linear-gradient(160deg, #2e083d 0%, #1f0427 60%, #150221 100%);
+    border: 2px solid rgba(255, 42, 133, 0.55);
+    border-radius: 18px;
+    box-shadow: 0 0 40px rgba(255, 42, 133, 0.35), 0 12px 40px rgba(0, 0, 0, 0.6);
+    padding: 1.75rem 1.5rem 1.5rem;
+    text-align: center;
+    animation: popIn 0.25s ease-out;
+}
+
+.confirmIcon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: #ffd700;
+    background: radial-gradient(circle, rgba(255, 42, 133, 0.35) 0%, rgba(114, 9, 183, 0.25) 100%);
+    border: 2px solid rgba(255, 112, 166, 0.6);
+    box-shadow: 0 0 18px rgba(255, 42, 133, 0.45);
+}
+
+.confirmTitle {
+    color: #ffd700;
+    font-weight: 900;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.confirmText {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.92rem;
+    margin-bottom: 1.4rem;
+    line-height: 1.5;
+}
+
+.confirmActions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.confirmActions button {
+    flex: 1;
+    font-weight: 800;
+    font-size: 0.92rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+}
+
+.confirmActions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btnConfirmFicar {
+    background: rgba(45, 6, 38, 0.95);
+    color: #ffffff;
+    border: 1.5px solid rgba(255, 112, 166, 0.5);
+}
+
+.btnConfirmFicar:hover:not(:disabled) {
+    border-color: #ff70a6;
+    background: rgba(70, 12, 60, 0.95);
+    transform: translateY(-2px);
+}
+
+.btnConfirmSair {
+    background: linear-gradient(135deg, #ff2a85 0%, #7209b7 100%);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 16px rgba(255, 42, 133, 0.45);
+}
+
+.btnConfirmSair:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(255, 42, 133, 0.7);
+}
+
 /* Responsividade */
 @media (max-width: 900px) {
     .feltTable {

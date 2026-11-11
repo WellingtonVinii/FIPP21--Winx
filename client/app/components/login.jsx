@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 
+import { useAuth } from "../context/AuthContext";
 import styles from "./login.module.css";
 
 export default function FormLogin() {
@@ -13,6 +14,7 @@ export default function FormLogin() {
     const [sucesso, setSucesso] = useState("");
     const [entrando, setEntrando] = useState(false);
     const router = useRouter();
+    const { login } = useAuth();
 
     async function entrar(evento) {
         evento.preventDefault();
@@ -21,17 +23,10 @@ export default function FormLogin() {
         setEntrando(true);
 
         try {
-            const resposta = await fetch("http://localhost:5000/login", {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, senha })
-            });
-            const resultado = await resposta.json();
-            if (!resposta.ok) {
-                throw new Error(resultado?.msg || "Não foi possível fazer login.");
-            }
-            setSucesso(`Login realizado com sucesso! Bem-vindo(a), ${resultado.usuario.nome}.`);
+            // usa o login do AuthContext para que o usuário logado fique disponível
+            // nas outras páginas (ex.: /salas) sem precisar recarregar
+            const usuarioLogado = await login(email, senha);
+            setSucesso(`Login realizado com sucesso! Bem-vindo(a), ${usuarioLogado.nome}.`);
             router.push('/salas');
         } catch (ex) {
             setErro(ex instanceof TypeError ? "Não foi possível conectar ao servidor." : ex.message);

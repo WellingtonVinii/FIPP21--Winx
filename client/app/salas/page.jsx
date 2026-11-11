@@ -1,16 +1,18 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
 
 export default function SalasLobby() {
-    const { usuario, logout, carregando } = useAuth();
+    const { usuario, logout, carregando, verificarUsuario } = useAuth();
     const router = useRouter();
+    const montado = useRef(true);
 
     const [salas, setSalas] = useState([]);
     const [carregandoSalas, setCarregandoSalas] = useState(true);
+    const [erroSalas, setErroSalas] = useState('');
 
     const [nomeNovaSala, setNomeNovaSala] = useState('');
     const [criandoSala, setCriandoSala] = useState(false);
@@ -27,25 +29,65 @@ export default function SalasLobby() {
 
     async function carregarSalas() {
         setCarregandoSalas(true);
-        try {
-            const res = await fetch(`${API_URL}/sala`, {
-                method: 'GET',
-                credentials: 'include'
-            });
-            if (res.ok) {
-                const dados = await res.json();
-                setSalas(Array.isArray(dados) ? dados : []);
+        setErroSalas('');
+        // se o servidor não responder (ainda subindo ou reiniciando), continua carregando e tentando
+        while (montado.current) {
+            try {
+                const res = await fetch(`${API_URL}/sala`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                if (res.ok) {
+                    const dados = await res.json();
+                    setSalas(Array.isArray(dados) ? dados : []);
+                    break;
+                }
+                if (res.status < 500) {
+                    const dados = await res.json().catch(() => null);
+                    setErroSalas(dados?.msg || 'Não foi possível carregar as salas.');
+                    break;
+                }
+            } catch (ex) {
+                console.warn('Servidor indisponível ao listar as salas, tentando novamente...');
             }
-        } catch (ex) {
-            console.error('Erro ao listar salas:', ex);
-        } finally {
-            setCarregandoSalas(false);
+            await new Promise((resolver) => setTimeout(resolver, 1500));
         }
+        setCarregandoSalas(false);
     }
 
     useEffect(() => {
-        if (!carregando && usuario) {
+        montado.current = true;
+        return () => {
+            montado.current = false;
+        };
+    }, []);
+
+    // botão "Atualizar": se a sessão não foi validada, tenta validar de novo antes de listar
+    async function atualizar() {
+        if (usuario) {
             carregarSalas();
+            return;
+        }
+
+        setCarregandoSalas(true);
+        setErroSalas('');
+        const logado = await verificarUsuario();
+        if (!logado) {
+            setCarregandoSalas(false);
+            setErroSalas('Não foi possível validar a sua sessão. Tente atualizar ou entre novamente.');
+        }
+        // se validou, o efeito abaixo carrega as salas
+    }
+
+    useEffect(() => {
+        if (carregando) return;
+
+        if (usuario) {
+            carregarSalas();
+        } else {
+            // sessão não validada (servidor fora do ar ou token recusado): não fica carregando para sempre
+            setCarregandoSalas(false);
+            setErroSalas('Não foi possível validar a sua sessão. Tente atualizar ou entre novamente.');
         }
     }, [carregando, usuario]);
 
@@ -299,7 +341,7 @@ export default function SalasLobby() {
                         </div>
                         <button
                             className="btn btn-outline-secondary btn-sm"
-                            onClick={carregarSalas}
+                            onClick={atualizar}
                             disabled={carregandoSalas}
                             title="Atualizar lista"
                         >
@@ -312,6 +354,11 @@ export default function SalasLobby() {
                             <div className="text-center py-5 text-muted">
                                 <i className="fas fa-spinner fa-spin fa-2x mb-2"></i>
                                 <p className="mb-0">Carregando salas...</p>
+                            </div>
+                        ) : erroSalas ? (
+                            <div className="text-center py-5 text-danger">
+                                <i className="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                                <p className="mb-0">{erroSalas}</p>
                             </div>
                         ) : salas.length === 0 ? (
                             <div className="text-center py-5 text-muted">

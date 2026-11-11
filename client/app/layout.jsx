@@ -23,7 +23,6 @@ export default function RootLayout({ children }) {
         <Script src="/template/js/jquery.min.js" strategy="beforeInteractive" />
         <Script src="/template/js/bootstrap.bundle.min.js" strategy="beforeInteractive" />
         <Script src="/template/js/sb-admin-2.min.js" strategy="afterInteractive" />
-        <Script src="https://cdn.socket.io/4.7.4/socket.io.min.js" strategy="afterInteractive" />
       </body>
     </html>
   );
