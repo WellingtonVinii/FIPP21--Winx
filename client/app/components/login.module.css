@@ -1,0 +1,132 @@
+/* Subtle login styling – blends with Winx mesa background */
+.wrapper {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, #8b004b, #2e0015); /* dark pink gradient */
+}
+
+.cardBody {
+  background: rgba(20, 10, 30, 0.75); /* Dark translucent background with a slight purple tint */
+  backdrop-filter: blur(10px); /* Glassmorphism effect */
+  color: #fdf2f8; 
+  border-radius: 1rem;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.title {
+  text-align: center;
+  color: #ffd700;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+}
+
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #fdf2f8;
+}
+
+.input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffd700;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
+.input::placeholder {
+  color: #aaa;
+  opacity: 0.8;
+}
+
+.btnSubmit {
+  width: 100%;
+  background: linear-gradient(135deg, #6c1256, #22031d);
+  border: 1px solid #ffd700;
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.85rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btnSubmit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.btnSubmit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.linkContainer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.linkText {
+  color: #ccc;
+}
+
+.link {
+  color: #ffd700;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Alertas de Feedback */
+.alert {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.alertError {
+  background: rgba(220, 53, 69, 0.15);
+  border: 1px solid #dc3545;
+  color: #ffb3b9;
+}
+
+.alertSuccess {
+  background: rgba(40, 167, 69, 0.15);
+  border: 1px solid #28a745;
+  color: #a3f7b5;
+}

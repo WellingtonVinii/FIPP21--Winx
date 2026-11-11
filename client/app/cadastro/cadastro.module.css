@@ -6,7 +6,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(circle at center, #152219 0%, #0a110c 100%);
+    background: linear-gradient(135deg, #8b004b, #2e0015); /* dark pink gradient */
     padding: 3.5rem 1.5rem;
     position: relative;
     overflow-y: auto;
@@ -28,16 +28,16 @@
     pointer-events: none;
 }
 
-/* Card centralizado inspirado na Mesa de Blackjack (Feltro verde, borda dourada e madeira) */
+/* Card centralizado inspirado na temática Winx/FIPP21 – fundo rosa escuro com detalhes dourados */
 .card {
-    background: radial-gradient(ellipse at 50% 20%, #18663e 0%, #0c3e24 60%, #082917 100%);
+    background: #22031d; /* primary theme color */
     width: 100%;
     max-width: 440px;
     margin: auto;
     padding: 2.2rem 2.2rem 1.8rem 2.2rem;
     border-radius: 24px;
     border: 2px solid #d4af37;
-    box-shadow: 
+    box-shadow:
         0 0 0 5px #1c140d,
         0 0 0 7px rgba(212, 175, 55, 0.7),
         inset 0 0 35px rgba(0, 0, 0, 0.85),
@@ -46,7 +46,7 @@
     position: relative;
     z-index: 10;
     backdrop-filter: blur(8px);
-    color: #f0f6fc;
+    color: #fdf2f8;
     box-sizing: border-box;
 }
 
