@@ -30,7 +30,7 @@ router.post("/", auth.validar, (req, res) => {
 
 router.get("/", auth.validar, (req, res) => {
     // #swagger.tags = ['Sala']
-    // #swagger.summary = 'Lista as salas criadas pelo usuário logado'
+    // #swagger.summary = 'Lista todas as salas, de qualquer usuário, com a quantidade de participantes ativos'
     /* #swagger.security = [{
             "jwt": []
     }] */

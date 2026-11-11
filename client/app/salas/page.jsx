@@ -23,6 +23,7 @@ export default function SalasLobby() {
     const [copiadoId, setCopiadoId] = useState(null);
 
     const API_URL = 'http://localhost:5000';
+    const MAX_JOGADORES = 4; // mesmo limite do back (SalaEntity.MAX_JOGADORES)
 
     async function carregarSalas() {
         setCarregandoSalas(true);
@@ -174,7 +175,7 @@ export default function SalasLobby() {
                                     Mesa de Blackjack - Área Restrita
                                 </h2>
                                 <p className="mb-0 text-white-50">
-                                    Crie uma sala exclusiva para convidar outros jogadores ou digite o código de uma sala existente.
+                                    Crie uma sala, digite o código de uma sala existente ou escolha uma das salas disponíveis abaixo.
                                 </p>
                             </div>
                             <div className="col-md-4 text-md-right mt-3 mt-md-0">
@@ -289,7 +290,7 @@ export default function SalasLobby() {
                     </div>
                 </div>
 
-                {/* Seção: Minhas Salas */}
+                {/* Seção: Salas Disponíveis (todas as salas, de qualquer usuário) */}
                 <div className="card border-0 shadow-sm mt-2">
                     <div className="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
                         <div className="d-flex align-items-center">
@@ -310,13 +311,13 @@ export default function SalasLobby() {
                         {carregandoSalas ? (
                             <div className="text-center py-5 text-muted">
                                 <i className="fas fa-spinner fa-spin fa-2x mb-2"></i>
-                                <p className="mb-0">Carregando suas salas...</p>
+                                <p className="mb-0">Carregando salas...</p>
                             </div>
                         ) : salas.length === 0 ? (
                             <div className="text-center py-5 text-muted">
                                 <i className="fas fa-folder-open fa-3x mb-3 text-gray-300"></i>
-                                <h5>Você ainda não criou nenhuma sala</h5>
-                                <p className="small mb-0">Utilize o formulário acima para criar sua primeira sala de Blackjack!</p>
+                                <h5>Nenhuma sala disponível no momento</h5>
+                                <p className="small mb-0">Utilize o formulário acima para criar a primeira sala de Blackjack!</p>
                             </div>
                         ) : (
                             <div className="table-responsive">
@@ -325,6 +326,8 @@ export default function SalasLobby() {
                                         <tr>
                                             <th style={{ width: "120px" }}>Código</th>
                                             <th>Nome da Sala</th>
+                                            <th>Criada por</th>
+                                            <th className="text-center" style={{ width: "120px" }}>Jogadores</th>
                                             <th className="text-center" style={{ width: "160px" }}>Compartilhar</th>
                                             <th className="text-right" style={{ width: "160px" }}>Ação</th>
                                         </tr>
@@ -339,6 +342,18 @@ export default function SalasLobby() {
                                                 </td>
                                                 <td>
                                                     <strong className="text-dark">{sala.nome}</strong>
+                                                </td>
+                                                <td className="text-muted">
+                                                    {sala.usuario?.nome}
+                                                    {sala.usuario?.id === usuario?.id && (
+                                                        <span className="badge badge-warning text-dark ml-2">Você</span>
+                                                    )}
+                                                </td>
+                                                <td className="text-center">
+                                                    <span className={`badge px-2 py-1 ${(sala.participantes ?? 0) >= MAX_JOGADORES ? 'badge-danger' : 'badge-success'}`}>
+                                                        <i className="fas fa-users mr-1"></i>
+                                                        {sala.participantes ?? 0}/{MAX_JOGADORES}
+                                                    </span>
                                                 </td>
                                                 <td className="text-center">
                                                     <button

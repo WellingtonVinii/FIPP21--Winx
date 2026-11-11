@@ -17,16 +17,14 @@ export default class SalaRepository extends Repository {
         return true;
     }
 
-    //salas criadas pelo usuário, com a quantidade de participantes ativos
-    async listarPorUsuario(usuarioId) {
+    //todas as salas (de qualquer usuário), com o dono e a quantidade de participantes ativos
+    async listar() {
         let sql = `SELECT s.*, u.usu_nome,
                     (SELECT COUNT(*) FROM tb_participante p WHERE p.sal_id = s.sal_id AND p.par_dtsaida IS NULL) AS qtd_participantes
                    FROM tb_sala s
                    INNER JOIN tb_usuario u ON u.usu_id = s.usu_id
-                   WHERE s.usu_id = ?
                    ORDER BY s.sal_id DESC`;
-        let valores = [usuarioId];
-        let rows = await this.banco.ExecutaComando(sql, valores);
+        let rows = await this.banco.ExecutaComando(sql);
 
         let entidades = [];
         for(let row of rows) {

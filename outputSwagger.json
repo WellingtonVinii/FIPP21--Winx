@@ -230,7 +230,7 @@
         "tags": [
           "Sala"
         ],
-        "summary": "Lista as salas criadas pelo usuário logado",
+        "summary": "Lista todas as salas, de qualquer usuário, com a quantidade de participantes ativos",
         "description": "",
         "responses": {
           "200": {

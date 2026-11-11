@@ -38,7 +38,7 @@ export default class SalaController {
 
     async listar(req, res) {
         try{
-            let salas = await this.#repo.listarPorUsuario(req.usuarioLogado.id);
+            let salas = await this.#repo.listar();
 
             return res.status(200).json(salas);
         }
